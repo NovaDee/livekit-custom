@@ -319,6 +319,7 @@ func (r *RoomManager) StartSession(
 		Event:         hanweb.EventConnectionClientInfo,
 		ParticipantId: string(pi.Identity),
 		RoomId:        string(roomName),
+		Logger:        true,
 		DetailInfo: []*hanweb.KeyValue{
 			{Key: "sdk", Value: string(pi.Client.Sdk)},
 			{Key: "sdkVersion", Value: pi.Client.Version},

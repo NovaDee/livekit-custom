@@ -2,6 +2,7 @@ package rtc
 
 import (
 	"context"
+	"github.com/livekit/livekit-server/pkg/hanweb"
 	"os"
 	"strconv"
 	"strings"
@@ -932,6 +933,15 @@ func (p *ParticipantImpl) GetConnectionQuality() *livekit.ConnectionQualityInfo 
 	}
 
 	prometheus.RecordQuality(minQuality, minScore, numUpDrops, numDownDrops)
+	hanweb.SendData(&hanweb.Data{
+		Event:         hanweb.EventConnectionQuality,
+		ParticipantId: string(p.Identity()),
+		RoomId:        string(p.params.RoomName),
+		DetailInfo: []*hanweb.KeyValue{
+			{Key: "lastRTT", Value: strconv.Itoa(int(p.lastRTT))},
+			{Key: "numDownDrops", Value: string(rune(numDownDrops))},
+		},
+	})
 
 	// remove unavailable tracks from track quality cache
 	p.lock.Lock()

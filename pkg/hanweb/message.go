@@ -7,6 +7,7 @@ type Data struct {
 	ParticipantId string      `protobuf:"bytes,2,opt,name=participant_id,proto3" json:"participant_id,omitempty"`
 	RoomId        string      `protobuf:"bytes,3,opt,name=room_id,proto3" json:"room_id,omitempty"`
 	DetailInfo    []*KeyValue `protobuf:"bytes,4,rep,name=detail_info,json=detailInfo,proto3" json:"detail_info,omitempty"`
+	Logger        bool
 }
 
 type KeyValue struct {

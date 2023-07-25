@@ -100,7 +100,7 @@ func (wm *LiveHook) postMessage(data *Data) error {
 		return err
 	}
 	status := res.StatusCode
-	if status == 200 {
+	if status == 200 && data.Logger {
 		logger.Infow("send livehook url: ", "cost: ", res.Header.Get("CostTime")+"ms", "url: ", wm.url, "status: ", status, "event: ", data.Event)
 	}
 	_ = res.Body.Close()

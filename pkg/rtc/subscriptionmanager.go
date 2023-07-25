@@ -321,6 +321,7 @@ func (m *SubscriptionManager) reconcileSubscription(s *trackSubscription) {
 				Event:         hanweb.EventSubscribeFail,
 				ParticipantId: string(m.params.Participant.Identity()),
 				RoomId:        string(m.params.RoomName),
+				Logger:        true,
 				DetailInfo: []*hanweb.KeyValue{
 					{Key: "subscribeId", Value: string(s.subscriberID)},
 					{Key: "publishId", Value: string(s.publisherID)},
