@@ -93,6 +93,7 @@ type ParticipantParams struct {
 	SubscriberAllowPause         bool
 	SubscriptionLimitAudio       int32
 	SubscriptionLimitVideo       int32
+	RoomName                     livekit.RoomName
 }
 
 type ParticipantImpl struct {
@@ -1161,6 +1162,7 @@ func (p *ParticipantImpl) setupSubscriptionManager() {
 		OnSubscriptionError:    p.onSubscriptionError,
 		SubscriptionLimitVideo: p.params.SubscriptionLimitVideo,
 		SubscriptionLimitAudio: p.params.SubscriptionLimitAudio,
+		RoomName:               p.params.RoomName,
 	})
 }
 

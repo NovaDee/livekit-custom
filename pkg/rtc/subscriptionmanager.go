@@ -18,6 +18,7 @@ package rtc
 
 import (
 	"context"
+	"github.com/livekit/livekit-server/pkg/hanweb"
 	"sync"
 	"time"
 
@@ -55,6 +56,7 @@ type SubscriptionManagerParams struct {
 	OnTrackUnsubscribed func(subTrack types.SubscribedTrack)
 	OnSubscriptionError func(trackID livekit.TrackID, fatal bool, err error)
 	Telemetry           telemetry.TelemetryService
+	RoomName            livekit.RoomName
 
 	SubscriptionLimitVideo, SubscriptionLimitAudio int32
 }
@@ -315,7 +317,17 @@ func (m *SubscriptionManager) reconcileSubscription(s *trackSubscription) {
 		}
 		if err := m.subscribe(s); err != nil {
 			s.recordAttempt(false)
-
+			hanweb.SendData(&hanweb.Data{
+				Event:         hanweb.EventSubscribeFail,
+				ParticipantId: string(m.params.Participant.Identity()),
+				RoomId:        string(m.params.RoomName),
+				DetailInfo: []*hanweb.KeyValue{
+					{Key: "subscribeId", Value: string(s.subscriberID)},
+					{Key: "publishId", Value: string(s.publisherID)},
+					{Key: "source", Value: m.params.TrackResolver(m.params.Participant.Identity(), s.trackID).Track.Kind().String()},
+					{Key: "err", Value: err.Error()},
+				},
+			})
 			switch err {
 			case ErrNoTrackPermission, ErrNoSubscribePermission, ErrNoReceiver, ErrNotOpen, ErrTrackNotAttached, ErrSubscriptionLimitExceeded:
 				// these are errors that are outside of our control, so we'll keep trying
@@ -517,6 +529,17 @@ func (m *SubscriptionManager) subscribe(s *trackSubscription) error {
 			}
 			s.setBound()
 			s.maybeRecordSuccess(m.params.Telemetry, m.params.Participant.ID())
+			hanweb.SendData(&hanweb.Data{
+				Event:         hanweb.EventSubscribeSuccess,
+				ParticipantId: string(m.params.Participant.Identity()),
+				RoomId:        string(m.params.RoomName),
+				DetailInfo: []*hanweb.KeyValue{
+					{Key: "subscribeId", Value: string(m.params.Participant.Identity())},
+					{Key: "publishId", Value: string(s.publisherIdentity)},
+					{Key: "source", Value: track.Kind().String()},
+					{Key: "err", Value: ""},
+				},
+			})
 		})
 		s.setSubscribedTrack(subTrack)
 

@@ -1,0 +1,21 @@
+port: 7880
+live_hook: http://192.168.85.142:8088/common-live-server/interface/liveKit/livehook
+rtc:
+    udp_port: 17882
+   # port_range_start: 40000
+   # port_range_end: 50000  
+    tcp_port: 17881
+    use_external_ip: false
+keys:
+  API85Y8nrcTM2Ew: NkAeLxiqGnNOsihTksTXuPPF6eTEcRSPlCj3BAvKFLV
+logging:
+    json: false
+    level: info
+prometheus_port: 6789
+webhook:
+  api_key: API85Y8nrcTM2Ew
+  urls:
+    - http://192.168.85.142:8088/common-live-server/interface/liveKit/webhook
+audio:
+  smooth_intervals: 10
+  active_level: 127

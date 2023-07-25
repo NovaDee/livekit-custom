@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/livekit/livekit-server/pkg/hanweb"
 	"math/rand"
 	"net"
 	"os"
@@ -272,7 +273,7 @@ func startServer(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
+	hanweb.Start(conf.LiveHook)
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 

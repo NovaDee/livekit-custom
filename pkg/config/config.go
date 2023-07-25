@@ -42,6 +42,7 @@ var (
 
 type Config struct {
 	Port           uint32                   `yaml:"port"`
+	LiveHook       string                   `yaml:"live_hook,omitempty"`
 	BindAddresses  []string                 `yaml:"bind_addresses,omitempty"`
 	PrometheusPort uint32                   `yaml:"prometheus_port,omitempty"`
 	Environment    string                   `yaml:"environment,omitempty"`

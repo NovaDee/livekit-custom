@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/livekit/livekit-server/pkg/hanweb"
 	"os"
 	"sync"
 	"time"
@@ -314,7 +315,19 @@ func (r *RoomManager) StartSession(
 		"reconnectReason", pi.ReconnectReason,
 		"adaptiveStream", pi.AdaptiveStream,
 	)
-
+	hanweb.SendData(&hanweb.Data{
+		Event:         hanweb.EventConnectionClientInfo,
+		ParticipantId: string(pi.Identity),
+		RoomId:        string(roomName),
+		DetailInfo: []*hanweb.KeyValue{
+			{Key: "sdk", Value: string(pi.Client.Sdk)},
+			{Key: "sdkVersion", Value: pi.Client.Version},
+			{Key: "nodeIp", Value: r.currentNode.Ip},
+			{Key: "os", Value: pi.Client.Os},
+			{Key: "network", Value: pi.Client.Network},
+			{Key: "browser", Value: pi.Client.Browser},
+		},
+	})
 	clientConf := r.clientConfManager.GetConfiguration(pi.Client)
 
 	pv := types.ProtocolVersion(pi.Client.Protocol)
@@ -375,6 +388,7 @@ func (r *RoomManager) StartSession(
 		SubscriberAllowPause:         subscriberAllowPause,
 		SubscriptionLimitAudio:       r.config.Limit.SubscriptionLimitAudio,
 		SubscriptionLimitVideo:       r.config.Limit.SubscriptionLimitVideo,
+		RoomName:                     roomName,
 	})
 	if err != nil {
 		return err
