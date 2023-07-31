@@ -26,7 +26,7 @@ func NewWebhookModule(conf config.HanWebCustomConfig) *LiveHook {
 		return nil
 	}
 	return &LiveHook{
-		dataChannel: make(chan *Data, 100),
+		dataChannel: make(chan *Data, 1000),
 		client:      newClient(),
 		url:         conf.CustomHook.URL,
 		init:        conf.CustomHook.Enabled,
@@ -46,14 +46,11 @@ func newClient() *retryablehttp.Client {
 	client.ResponseLogHook = func(logger retryablehttp.Logger, resp *http.Response) {
 		startTimeStr := resp.Request.Header.Get("StartTime")
 		parseInt, err := strconv.ParseInt(startTimeStr, 10, 64)
-		if err != nil {
-			resp.Header.Set("CostTime", "1")
-		} else {
+		if err == nil {
 			responseTime := time.Now().UnixNano() / int64(time.Millisecond)
 			i := responseTime - parseInt
 			resp.Header.Set("CostTime", strconv.FormatInt(i, 10))
 		}
-
 	}
 	return client
 }
