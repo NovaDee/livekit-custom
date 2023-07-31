@@ -29,3 +29,4 @@ COPY --from=builder /workspace/livekit-server /livekit-server
 
 # Run the binary.
 ENTRYPOINT ["/livekit-server"]
+#命令示例：docker build --build-arg REPOSITORY=docker.hanweb.com/hanwebbase/livertc --build-arg TAG=v1.4.4-c.1 -t docker.hanweb.com/hanwebbase/livertc:v1.4.4-c.1 .
