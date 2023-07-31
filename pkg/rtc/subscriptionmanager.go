@@ -592,6 +592,18 @@ func (m *SubscriptionManager) unsubscribe(s *trackSubscription) error {
 	track := subTrack.MediaTrack()
 	pID := m.params.Participant.ID()
 	m.pendingUnsubscribes.Inc()
+	// HANWEB-CUSTOM: send unsubscribe
+	hanweb.SendData(&hanweb.Data{
+		Event:         hanweb.EventSubscribeSuccess,
+		ParticipantId: string(m.params.Participant.Identity()),
+		RoomId:        string(m.params.RoomName),
+		DetailInfo: []*hanweb.KeyValue{
+			{Key: "unSubscribeId", Value: string(m.params.Participant.Identity())},
+			{Key: "publishId", Value: string(s.publisherIdentity)},
+			{Key: "source", Value: track.Kind().String()},
+			{Key: "err", Value: ""},
+		},
+	})
 	go func() {
 		defer m.pendingUnsubscribes.Dec()
 		track.RemoveSubscriber(pID, false)

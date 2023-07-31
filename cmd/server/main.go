@@ -273,7 +273,7 @@ func startServer(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	hanweb.Start(conf.LiveHook)
+	hanweb.Start(conf)
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 

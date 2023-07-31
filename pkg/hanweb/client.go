@@ -4,26 +4,32 @@ import (
 	"bytes"
 	"github.com/golang/protobuf/proto"
 	"github.com/hashicorp/go-retryablehttp"
+	"github.com/livekit/livekit-server/pkg/config"
 	"github.com/livekit/protocol/logger"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-var LH *LiveHook = nil
+var LH *LiveHook
 
 type LiveHook struct {
 	dataChannel chan *Data
 	client      *retryablehttp.Client
 	url         string
+	init        bool
 }
 
 // NewWebhookModule 初始化WebhookModule实例
-func NewWebhookModule(url string) *LiveHook {
+func NewWebhookModule(conf config.HanWebCustomConfig) *LiveHook {
+	if !conf.CustomHook.Enabled {
+		return nil
+	}
 	return &LiveHook{
 		dataChannel: make(chan *Data, 100),
 		client:      newClient(),
-		url:         url,
+		url:         conf.CustomHook.URL,
+		init:        conf.CustomHook.Enabled,
 		// 初始化数据通道
 		// 其他初始化逻辑
 	}
@@ -53,9 +59,12 @@ func newClient() *retryablehttp.Client {
 }
 
 // Start 启动WebhookModule
-func Start(url string) *LiveHook {
-	logger.Infow("starting custom livehook module")
-	module := NewWebhookModule(url)
+func Start(conf *config.Config) *LiveHook {
+	logger.Infow("hanweb module ", "enable", conf.Hanweb.CustomHook.Enabled, "url", conf.Hanweb.CustomHook.URL)
+	module := NewWebhookModule(conf.Hanweb)
+	if module == nil {
+		return nil
+	}
 	LH = module
 	LH.ConsumeData()
 	return LH
@@ -76,15 +85,14 @@ func (LH *LiveHook) ConsumeData() {
 
 // SendData 将数据发送到数据通道
 func SendData(data *Data) {
-	LH.dataChannel <- data
+	if LH != nil && LH.init {
+		LH.dataChannel <- data
+	}
 }
 
 func (wm *LiveHook) postMessage(data *Data) error {
 	// 使用 proto.Marshal 将 data 序列化为二进制数据
 	encoded, err := proto.Marshal(data)
-	if err != nil {
-		return err
-	}
 	if err != nil {
 		return err
 	}

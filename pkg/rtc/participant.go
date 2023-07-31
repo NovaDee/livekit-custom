@@ -933,13 +933,17 @@ func (p *ParticipantImpl) GetConnectionQuality() *livekit.ConnectionQualityInfo 
 	}
 
 	prometheus.RecordQuality(minQuality, minScore, numUpDrops, numDownDrops)
+	// HANWEB-CUSTOM: send quality
 	hanweb.SendData(&hanweb.Data{
 		Event:         hanweb.EventConnectionQuality,
 		ParticipantId: string(p.Identity()),
 		RoomId:        string(p.params.RoomName),
 		DetailInfo: []*hanweb.KeyValue{
 			{Key: "lastRTT", Value: strconv.Itoa(int(p.lastRTT))},
-			{Key: "numDownDrops", Value: string(rune(numDownDrops))},
+			{Key: "numDownDrops", Value: strconv.Itoa(numDownDrops)},
+			{Key: "numUpDrops", Value: strconv.Itoa(numUpDrops)},
+			{Key: "minScore", Value: strconv.Itoa(int(minScore))},
+			{Key: "minQuality", Value: strconv.Itoa(int(minQuality))},
 		},
 	})
 

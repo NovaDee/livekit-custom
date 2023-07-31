@@ -1,5 +1,8 @@
 port: 7880
-live_hook: http://192.168.85.142:8088/common-live-server/interface/liveKit/livehook
+hanweb:
+  custom_hook:
+    url: http://192.168.85.142:8088/common-live-server/interface/liveKit/livehook
+    enabled: true
 rtc:
     udp_port: 17882
    # port_range_start: 40000

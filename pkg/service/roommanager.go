@@ -321,7 +321,7 @@ func (r *RoomManager) StartSession(
 		RoomId:        string(roomName),
 		Logger:        true,
 		DetailInfo: []*hanweb.KeyValue{
-			{Key: "sdk", Value: string(pi.Client.Sdk)},
+			{Key: "sdk", Value: pi.Client.Sdk.String()},
 			{Key: "sdkVersion", Value: pi.Client.Version},
 			{Key: "nodeIp", Value: r.currentNode.Ip},
 			{Key: "os", Value: pi.Client.Os},

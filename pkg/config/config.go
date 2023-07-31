@@ -42,10 +42,10 @@ var (
 
 type Config struct {
 	Port           uint32                   `yaml:"port"`
-	LiveHook       string                   `yaml:"live_hook,omitempty"`
 	BindAddresses  []string                 `yaml:"bind_addresses,omitempty"`
 	PrometheusPort uint32                   `yaml:"prometheus_port,omitempty"`
 	Environment    string                   `yaml:"environment,omitempty"`
+	Hanweb         HanWebCustomConfig       `yaml:"hanweb,omitempty"`
 	RTC            RTCConfig                `yaml:"rtc,omitempty"`
 	Redis          redisLiveKit.RedisConfig `yaml:"redis,omitempty"`
 	Audio          AudioConfig              `yaml:"audio,omitempty"`
@@ -205,6 +205,15 @@ type TURNConfig struct {
 	RelayPortRangeStart uint16 `yaml:"relay_range_start,omitempty"`
 	RelayPortRangeEnd   uint16 `yaml:"relay_range_end,omitempty"`
 	ExternalTLS         bool   `yaml:"external_tls,omitempty"`
+}
+
+type HanWebCustomConfig struct {
+	CustomHook HanWebCustomHook `yaml:"custom_hook,omitempty"`
+}
+
+type HanWebCustomHook struct {
+	Enabled bool   `yaml:"enabled"`
+	URL     string `yaml:"url,omitempty"`
 }
 
 type WebHookConfig struct {

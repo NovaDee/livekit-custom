@@ -301,6 +301,8 @@ func (q *qualityScorer) Update(stat *windowStat, at time.Time) {
 			factor = decreaseFactor
 		}
 		score = factor*score + (1.0-factor)*q.score
+
+		logger.Infow("qualit", "packetScore：", packetScore, "bitrateScore：", bitrateScore, "layerScore：", layerScore)
 	}
 	if score < minScore {
 		// lower bound to prevent score from becoming very small values due to extreme conditions.
