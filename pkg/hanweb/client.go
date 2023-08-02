@@ -20,6 +20,18 @@ type LiveHook struct {
 	init        bool
 }
 
+// Start 启动WebhookModule
+func Start(conf *config.Config) *LiveHook {
+	logger.Infow("hanweb module ", "enable", conf.Hanweb.CustomHook.Enabled, "url", conf.Hanweb.CustomHook.URL)
+	module := NewWebhookModule(conf.Hanweb)
+	if module == nil {
+		return nil
+	}
+	LH = module
+	LH.ConsumeData()
+	return LH
+}
+
 // NewWebhookModule 初始化WebhookModule实例
 func NewWebhookModule(conf config.HanWebCustomConfig) *LiveHook {
 	if !conf.CustomHook.Enabled {
@@ -55,16 +67,11 @@ func newClient() *retryablehttp.Client {
 	return client
 }
 
-// Start 启动WebhookModule
-func Start(conf *config.Config) *LiveHook {
-	logger.Infow("hanweb module ", "enable", conf.Hanweb.CustomHook.Enabled, "url", conf.Hanweb.CustomHook.URL)
-	module := NewWebhookModule(conf.Hanweb)
-	if module == nil {
-		return nil
+// SendData 将数据发送到数据通道
+func SendData(data *Data) {
+	if LH != nil && LH.init {
+		LH.dataChannel <- data
 	}
-	LH = module
-	LH.ConsumeData()
-	return LH
 }
 
 // ConsumeData 数据消费逻辑，从数据通道中读取数据并执行消息推送
@@ -78,13 +85,6 @@ func (LH *LiveHook) ConsumeData() {
 			}
 		}
 	}()
-}
-
-// SendData 将数据发送到数据通道
-func SendData(data *Data) {
-	if LH != nil && LH.init {
-		LH.dataChannel <- data
-	}
 }
 
 func (wm *LiveHook) postMessage(data *Data) error {

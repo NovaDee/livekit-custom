@@ -29,4 +29,5 @@ func (c CustomHookEvent) String() string {
 	default:
 		return fmt.Sprintf("%d", int(c))
 	}
+
 }
