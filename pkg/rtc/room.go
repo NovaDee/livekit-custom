@@ -639,6 +639,7 @@ func (r *Room) CloseIfEmpty() {
 		// need to give time in case participant is reconnecting
 		timeout = RoomDepartureGrace
 	} else {
+		// 创建了房间，但是无人进入，房间自始至终无人进入触发
 		elapsed = time.Now().Unix() - r.protoRoom.CreationTime
 		timeout = r.protoRoom.EmptyTimeout
 	}

@@ -22,3 +22,5 @@ webhook:
 audio:
   smooth_intervals: 10
   active_level: 127
+room:
+  empty_timeout: 10
