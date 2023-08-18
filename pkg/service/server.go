@@ -112,7 +112,6 @@ func NewLivekitServer(conf *config.Config,
 	mux.Handle("/rtc", rtcService)
 	mux.HandleFunc("/rtc/validate", rtcService.Validate)
 	mux.HandleFunc("/", s.defaultHandler)
-	mux.HandleFunc("/mdy", s.cfgUpd)
 
 	s.httpServer = &http.Server{
 		Handler: configureMiddlewares(mux, middlewares...),
@@ -322,16 +321,6 @@ func (s *LivekitServer) defaultHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.NotFound(w, r)
 	}
-}
-
-func (s *LivekitServer) cfgUpd(w http.ResponseWriter, r *http.Request) {
-	cfg := s.config
-	fmt.Println("===================before modify================", cfg.Hanweb.CustomHook.Enabled)
-	cfg.Hanweb.CustomHook.Enabled = false
-	fmt.Println("===================after modify================", cfg.Hanweb.CustomHook.Enabled)
-	fmt.Println("===================before modify================", cfg.Room.EmptyTimeout)
-	cfg.Room.EmptyTimeout = 30
-	fmt.Println("===================after modify================", cfg.Room.EmptyTimeout)
 }
 
 func (s *LivekitServer) healthCheck(w http.ResponseWriter, _ *http.Request) {

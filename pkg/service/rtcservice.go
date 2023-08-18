@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/gorilla/websocket"
 	"io"
 	"math/rand"
 	"net/http"
@@ -13,7 +14,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gorilla/websocket"
 	"github.com/ua-parser/uap-go/uaparser"
 	"golang.org/x/exp/maps"
 
