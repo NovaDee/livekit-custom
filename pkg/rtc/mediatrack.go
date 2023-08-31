@@ -256,7 +256,7 @@ func (t *MediaTrack) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.Tra
 		})
 		newWR.OnStatsUpdate(func(_ *sfu.WebRTCReceiver, stat *livekit.AnalyticsStat) {
 			// LK-TODO: this needs to be receiver/mime aware
-			key := telemetry.StatsKeyForTrack(livekit.StreamType_UPSTREAM, t.PublisherID(), t.ID(), t.params.TrackInfo.Source, t.params.TrackInfo.Type)
+			key := telemetry.StatsKeyForTrack(livekit.StreamType_UPSTREAM, t.PublisherIdentity(), t.PublisherID(), t.ID(), t.params.TrackInfo.Source, t.params.TrackInfo.Type)
 			t.params.Telemetry.TrackStats(key, stat)
 		})
 		if t.PrimaryReceiver() == nil {

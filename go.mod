@@ -11,8 +11,10 @@ require (
 	github.com/frostbyte73/core v0.0.9
 	github.com/gammazero/deque v0.2.1
 	github.com/gammazero/workerpool v1.1.3
+	github.com/golang/protobuf v1.5.3
 	github.com/google/wire v0.5.0
 	github.com/gorilla/websocket v1.5.0
+	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/golang-lru/v2 v2.0.4
 	github.com/jxskiss/base62 v1.1.0
@@ -61,12 +63,10 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.4 // indirect
 	github.com/josharian/native v1.1.0 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect

@@ -3,25 +3,28 @@ package telemetry
 import (
 	"github.com/livekit/livekit-server/pkg/telemetry/prometheus"
 	"github.com/livekit/protocol/livekit"
+	"github.com/livekit/protocol/logger"
 )
 
 type StatsKey struct {
-	streamType    livekit.StreamType
-	participantID livekit.ParticipantID
-	trackID       livekit.TrackID
-	trackSource   livekit.TrackSource
-	trackType     livekit.TrackType
-	track         bool
+	streamType          livekit.StreamType
+	participantID       livekit.ParticipantID
+	participantIdentity livekit.ParticipantIdentity
+	trackID             livekit.TrackID
+	trackSource         livekit.TrackSource
+	trackType           livekit.TrackType
+	track               bool
 }
 
-func StatsKeyForTrack(streamType livekit.StreamType, participantID livekit.ParticipantID, trackID livekit.TrackID, trackSource livekit.TrackSource, trackType livekit.TrackType) StatsKey {
+func StatsKeyForTrack(streamType livekit.StreamType, participantIdentity livekit.ParticipantIdentity, participantID livekit.ParticipantID, trackID livekit.TrackID, trackSource livekit.TrackSource, trackType livekit.TrackType) StatsKey {
 	return StatsKey{
-		streamType:    streamType,
-		participantID: participantID,
-		trackID:       trackID,
-		trackSource:   trackSource,
-		trackType:     trackType,
-		track:         true,
+		streamType:          streamType,
+		participantID:       participantID,
+		participantIdentity: participantIdentity,
+		trackID:             trackID,
+		trackSource:         trackSource,
+		trackType:           trackType,
+		track:               true,
 	}
 }
 
@@ -39,7 +42,6 @@ func (t *telemetryService) TrackStats(key StatsKey, stat *livekit.AnalyticsStat)
 		if key.streamType == livekit.StreamType_DOWNSTREAM {
 			direction = prometheus.Outgoing
 		}
-
 		nacks := uint32(0)
 		plis := uint32(0)
 		firs := uint32(0)
@@ -63,6 +65,7 @@ func (t *telemetryService) TrackStats(key StatsKey, stat *livekit.AnalyticsStat)
 			}
 			if key.track {
 				prometheus.RecordPacketLoss(direction, key.trackSource, key.trackType, stream.PacketsLost, stream.PrimaryPackets+stream.PaddingPackets)
+				logger.Infow("轨道数据参数", "成员Id", key.participantIdentity, "房间Id", t.getRoomDetails(key.participantID).Name, "PacketsLost", stream.PacketsLost, "TOTAL", stream.PrimaryPackets+stream.PaddingPackets)
 				prometheus.RecordRTT(direction, key.trackSource, key.trackType, stream.Rtt)
 				prometheus.RecordJitter(direction, key.trackSource, key.trackType, stream.Jitter)
 			}

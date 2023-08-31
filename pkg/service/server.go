@@ -110,6 +110,7 @@ func NewLivekitServer(conf *config.Config,
 	mux.Handle(egressServer.PathPrefix(), egressServer)
 	mux.Handle(ingressServer.PathPrefix(), ingressServer)
 	mux.Handle("/rtc", rtcService)
+	mux.HandleFunc("/listNodes", s.ListNodes)
 	mux.HandleFunc("/rtc/validate", rtcService.Validate)
 	mux.HandleFunc("/", s.defaultHandler)
 
@@ -307,6 +308,17 @@ func (s *LivekitServer) debugInfo(w http.ResponseWriter, _ *http.Request) {
 	s.roomManager.lock.RUnlock()
 
 	b, err := json.Marshal(info)
+	if err != nil {
+		w.WriteHeader(400)
+		_, _ = w.Write([]byte(err.Error()))
+	} else {
+		_, _ = w.Write(b)
+	}
+}
+
+func (s *LivekitServer) ListNodes(w http.ResponseWriter, _ *http.Request) {
+	nodes, _ := s.router.ListNodes()
+	b, err := json.Marshal(nodes)
 	if err != nil {
 		w.WriteHeader(400)
 		_, _ = w.Write([]byte(err.Error()))

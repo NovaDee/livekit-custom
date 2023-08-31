@@ -2,7 +2,7 @@ port: 7880
 hanweb:
   custom_hook:
     url: http://192.168.85.142:8090/common-live-server/interface/liveKit/livehook
-    enabled: true
+    enabled: false
 rtc:
     udp_port: 17882
    # port_range_start: 40000
@@ -16,13 +16,13 @@ logging:
     level: info
 prometheus_port: 6789
 development: true
-redis:
-  address: 192.168.83.210:6379
-  db: 8
-webhook:
-  api_key: API85Y8nrcTM2Ew
-  urls:
-    - http://192.168.85.142:8090/common-live-server/interface/liveKit/webhook
+#redis:
+#  address: 192.168.83.210:6379
+#  db: 8
+#webhook:
+#  api_key: API85Y8nrcTM2Ew
+#  urls:
+#    - http://192.168.85.142:8090/common-live-server/interface/liveKit/webhook
 audio:
   smooth_intervals: 10
   active_level: 127
